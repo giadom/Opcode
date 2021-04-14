@@ -8,10 +8,10 @@ _start:
         xor rdx,rdx         ; \0 ad envp
         xor rsi,rsi         ; \0 ad argv
         push rdx            ; \0 che mi indica la fine della stringa
-        mov r10,"/bin//sh"  ; Metto in un registro temporaneo la stringa. (// per arrivare a 32 bit)
+        mov r10,"/bin//sh"  ; Metto in un registro temporaneo la stringa. (// per arrivare a 64 bit)
         push r10
         mov rdi,rsp         ; Metto in rdi il puntatore a "/bin//sh\0"
         syscall
         ; Non dovrei essere qui
-        add rax,1           ; Ritorno un errore
+        add rax,-1           ; Ritorno un errore
         ret
