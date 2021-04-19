@@ -1,32 +1,30 @@
         section .text
         global _start
 _start:
-;        mov rax,0x39                ; Identificativo fork
-;        syscall
-;        
-;        cmp rax,0x0
-;        jz figlio
-;        ; Padre
-;        xor rax,rax
-;        ret
-;        
-;figlio:
-        mov rax,0x3B                ; Identificativo della execve
+        mov rax,0x39                ; Identificativo fork
+        syscall
         
-        xor rdx,rdx                 ; NULL ad envp
+        cmp rax,0x0
+        jz figlio
+        ; Padre
+        xor rax,rax
+        ret
         
-        push 0                    ; NULL per indicare la fine di argv
-        mov rsi,`ZZZZZZZ\0`
-        push rsi
-        push rsp
-        mov rsi,rsp                 ; Puntatore all'inizio della stringa argv
-        
+figlio:
+        mov rdx, 0x0            ; NULL ad envp
+        mov rsi,`AAAAAAA\0`
+        push rsi                ; "AAAAAAA\0"
+        mov rsi, rsp            ; Mi prendo &"AAAAAAA\0"
         mov rdi,`//touch\0`
-        push rdi
-        mov rdi,"/bin////"
-        push rdi
-        mov rdi,rsp                 ; Puntatore all'inizio della stringa indicante il progamma da eseguire
-        
+        push rdi                ; "//touch\0"
+        mov rdi,"//bin///"
+        push rdi                ; "//bin///"
+        mov rdi, rsp            ; Mi prendo &"//bin/////touch\0" che sara` il programma da eseguire
+        push 0                  ; NULL per indicare la fine di argv
+        push rsi                ; Metto l'indirizzo di partenza della stringa AAAAAAA\0
+        push rdi                ; Metto l'indirizzo di partenza della stringa //bin/////touch\0"
+        mov rsi, rsp            ; argv["//bin////touch\0", "AAAAAAA\0"] il primo argomento di argv deve essere il programma da eseguire
+        mov rax,0x3B            ; Identificativo execve
         syscall
         
         mov rax,0x3C                ; Identificativo della exit
